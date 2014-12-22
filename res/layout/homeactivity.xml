@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg" >
+
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="88dp"
+        android:layout_marginTop="186dp"
+        android:text="@string/play" />
+
+    <Button
+        android:id="@+id/btnScores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnPlay"
+        android:layout_marginTop="26dp"
+        android:layout_toLeftOf="@+id/btnPlay"
+        android:text="@string/scores" />
+
+    <Button
+        android:id="@+id/btnAbout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnScores"
+        android:layout_marginTop="31dp"
+        android:layout_toLeftOf="@+id/btnScores"
+        android:text="@string/about" />
+
+</RelativeLayout>

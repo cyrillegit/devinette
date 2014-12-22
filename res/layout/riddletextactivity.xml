@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/header" />
+
+    <Button
+        android:id="@+id/btnValidate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="18dp"
+        android:text="@string/validate" />
+
+    <Button
+        android:id="@+id/btnHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnValidate"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="18dp"
+        android:text="@string/hint" />
+
+    <TextView
+        android:id="@+id/tvRiddleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/multiAutoCompleteTextViewriddle"
+        android:layout_alignLeft="@+id/btnHint"
+        android:layout_alignRight="@+id/btnValidate"
+        android:layout_below="@+id/header"
+        android:layout_marginTop="19dp"
+        android:text="Riddle Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextViewriddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnValidate"
+        android:layout_alignLeft="@+id/tvRiddleText"
+        android:layout_alignRight="@+id/tvRiddleText"
+        android:layout_marginBottom="120dp"
+        android:ems="10"
+        android:hint="@string/your_answer" >
+
+        <requestFocus />
+    </MultiAutoCompleteTextView>
+
+</RelativeLayout>
