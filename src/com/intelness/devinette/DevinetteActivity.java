@@ -3,24 +3,36 @@ package com.intelness.devinette;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class DevinetteActivity extends Activity {
-    Button         btnHint;
-    Button         btnValidate;
-    private String hintMessage = "Hint message";
+    Button                     btnHint;
+    Button                     btnValidate;
+
+    EditText                   etAnswer;
+
+    private String             hintMessage    = "Hint message";
+    private String             answer         = "";
+
+    public final static String PROCESS_ANSWER = "processAnswer";
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.riddletextactivity );
+        setContentView( R.layout.devinetteactivity );
 
         btnHint = (Button) findViewById( R.id.btnHint );
         btnValidate = (Button) findViewById( R.id.btnValidate );
 
+        etAnswer = (EditText) findViewById( R.id.etAnswer );
+
         onClickBtnHint();
+        onClickValidate();
     }
 
     @Override
@@ -79,4 +91,33 @@ public class DevinetteActivity extends Activity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    private void onClickValidate() {
+
+        btnValidate.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick( View v ) {
+                boolean aProcessAnswer = processAnswer();
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean( PROCESS_ANSWER, aProcessAnswer );
+
+                Intent intent = new Intent( getApplicationContext(), AnswerActivity.class );
+                intent.putExtras( bundle );
+                startActivity( intent );
+                finish();
+            }
+        } );
+    }
+
+    private boolean processAnswer() {
+        answer = (String) etAnswer.getText().toString();
+        if ( TextUtils.isEmpty( answer ) ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

@@ -36,6 +36,13 @@
             
         </activity>
         
+        <!-- Answer Activity -->
+        <activity 
+            android:name=".AnswerActivity"
+            android:label="@string/app_name">
+            
+        </activity>
+        
     </application>
 
 </manifest>

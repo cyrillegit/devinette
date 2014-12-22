@@ -24,6 +24,8 @@ public class HomeActivity extends Activity {
         btnAbout = (Button) findViewById( R.id.btnAbout );
 
         onClickBtnPlay();
+        onClickBtnAbout();
+        onClickBtnScores();
     }
 
     @Override
@@ -61,7 +63,6 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-                // TODO Auto-generated method stub
 
             }
         } );

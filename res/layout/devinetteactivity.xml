@@ -31,7 +31,7 @@
         android:id="@+id/tvRiddleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/multiAutoCompleteTextViewriddle"
+        android:layout_above="@+id/etAnswer"
         android:layout_alignLeft="@+id/btnHint"
         android:layout_alignRight="@+id/btnValidate"
         android:layout_below="@+id/header"
@@ -40,7 +40,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextViewriddle"
+        android:id="@+id/etAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnValidate"
