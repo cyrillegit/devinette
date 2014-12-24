@@ -29,8 +29,8 @@ public final class R {
         public static final int ivlogo=0x7f060012;
         public static final int tvAnswer=0x7f060001;
         public static final int tvDescriptionAnswer=0x7f060002;
+        public static final int tvDevinette=0x7f060009;
         public static final int tvPointsGained=0x7f060003;
-        public static final int tvRiddleText=0x7f060009;
         public static final int tvloading=0x7f060011;
         public static final int tvpseudo=0x7f06000c;
         public static final int tvscores=0x7f06000d;
@@ -47,6 +47,7 @@ public final class R {
         public static final int app_name=0x7f040000;
         public static final int back_btn_clicked=0x7f040009;
         public static final int close=0x7f04000a;
+        public static final int empty_answer=0x7f04000d;
         public static final int hint=0x7f040006;
         public static final int hint_title=0x7f04000b;
         public static final int is_to_come=0x7f04000c;

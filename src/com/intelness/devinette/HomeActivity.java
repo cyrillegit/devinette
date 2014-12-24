@@ -1,18 +1,25 @@
 package com.intelness.devinette;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity {
-    Button          btnPlay;
-    Button          btnScores;
-    Button          btnAbout;
+import com.intelness.beans.Devinette;
+import com.intelness.db.DatabaseHandler;
 
-    private boolean countDown = false;
+public class HomeActivity extends Activity {
+    Button                      btnPlay;
+    Button                      btnScores;
+    Button                      btnAbout;
+
+    private boolean             countDown = false;
+    private final static String TAG       = "HomeActivity";
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -63,7 +70,7 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-
+                LoadDevinettes();
             }
         } );
     }
@@ -76,9 +83,30 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-                // TODO Auto-generated method stub
-
+                readDevinettes();
             }
         } );
+    }
+
+    private void LoadDevinettes() {
+        DatabaseHandler db = new DatabaseHandler( this );
+
+        Log.d( "Insert", "Inserting" );
+        db.addDevinette( new Devinette( "Histoire d'elephant", "Elephant" ) );
+        db.addDevinette( new Devinette( "Histoire de lion", "Lion" ) );
+        db.addDevinette( new Devinette( "Histoire de singe", "Singe" ) );
+        db.addDevinette( new Devinette( "Histoire de girafe", "Girafe" ) );
+    }
+
+    private void readDevinettes() {
+        DatabaseHandler db = new DatabaseHandler( this );
+
+        Log.d( "Reading", "Reading all devinettes" );
+        List<Devinette> devinette = db.getAllDevinettes();
+        for ( Devinette d : devinette ) {
+            String log = "Id: " + d.getId() + " , Devinette: " + d.getDevinette() + " , Answer: " + d.getAnswer();
+            Log.d( "Devinettes : ", log );
+        }
+        Log.d( TAG, "all devinettes: " + db.getNumberOfDevinettes() );
     }
 }

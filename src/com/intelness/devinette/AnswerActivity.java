@@ -36,7 +36,9 @@ public class AnswerActivity extends Activity {
         }
 
         aProcessAnswer = getBundleAnswer().getBoolean( DevinetteActivity.PROCESS_ANSWER );
-        Toast.makeText( getApplicationContext(), "Boolean Bundle : " + aProcessAnswer, Toast.LENGTH_LONG ).show();
+        // Toast.makeText( getApplicationContext(), "Boolean Bundle : " +
+        // aProcessAnswer, Toast.LENGTH_LONG ).show();
+        displayAnswer( aProcessAnswer );
     }
 
     @Override
@@ -49,6 +51,9 @@ public class AnswerActivity extends Activity {
 
     }
 
+    /**
+     * triggered when button quit is clicked
+     */
     private void onClickBtnQuit() {
         btnQuit.setOnClickListener( new View.OnClickListener() {
 
@@ -61,6 +66,9 @@ public class AnswerActivity extends Activity {
         } );
     }
 
+    /**
+     * triggered when button continue is clicked
+     */
     private void onClickBtnContinue() {
         btnContinue.setOnClickListener( new View.OnClickListener() {
 
@@ -73,6 +81,11 @@ public class AnswerActivity extends Activity {
         } );
     }
 
+    /**
+     * retrieve a bundle
+     * 
+     * @return
+     */
     private Bundle getBundleAnswer() {
         Bundle bundle = null;
         if ( this.getIntent() == null ) {
@@ -84,5 +97,18 @@ public class AnswerActivity extends Activity {
             return null;
         }
         return bundle;
+    }
+
+    /**
+     * display a response according to the giving answer
+     * 
+     * @param answer
+     */
+    private void displayAnswer( boolean answer ) {
+        if ( answer == true ) {
+            Toast.makeText( getApplicationContext(), "Bonne reponse", Toast.LENGTH_LONG ).show();
+        } else {
+            Toast.makeText( getApplicationContext(), "Mauvaise reponse", Toast.LENGTH_LONG ).show();
+        }
     }
 }

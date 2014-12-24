@@ -8,6 +8,7 @@
         android:targetSdkVersion="8" />
 
     <application
+        android:name="com.intelness.globals.AppManager"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -16,6 +17,7 @@
          <!-- Splash Activity -->
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +28,15 @@
         <!-- Home Activity -->
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
         
         <!-- Riddle text Activity -->
         <activity 
             android:name=".DevinetteActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             
         </activity>
@@ -39,6 +44,7 @@
         <!-- Answer Activity -->
         <activity 
             android:name=".AnswerActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             
         </activity>

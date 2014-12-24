@@ -28,7 +28,7 @@
         android:text="@string/hint" />
 
     <TextView
-        android:id="@+id/tvRiddleText"
+        android:id="@+id/tvDevinette"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/etAnswer"
@@ -36,21 +36,23 @@
         android:layout_alignRight="@+id/btnValidate"
         android:layout_below="@+id/header"
         android:layout_marginTop="19dp"
-        android:text="Riddle Text"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <MultiAutoCompleteTextView
+    <AutoCompleteTextView
         android:id="@+id/etAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnValidate"
-        android:layout_alignLeft="@+id/tvRiddleText"
-        android:layout_alignRight="@+id/tvRiddleText"
+        android:layout_alignLeft="@+id/tvDevinette"
+        android:layout_alignRight="@+id/tvDevinette"
         android:layout_marginBottom="120dp"
         android:ems="10"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
         android:hint="@string/your_answer" >
 
         <requestFocus />
-    </MultiAutoCompleteTextView>
+    </AutoCompleteTextView>
 
 </RelativeLayout>

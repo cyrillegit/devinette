@@ -13,5 +13,6 @@
     <string name="close">Close</string>
     <string name="hint_title">Hint</string>
     <string name="is_to_come">Is to come ...</string>
+    <string name="empty_answer">Veuillez entrer une reponse.</string>
 
 </resources>
