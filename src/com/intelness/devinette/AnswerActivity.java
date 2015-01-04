@@ -20,6 +20,8 @@ public class AnswerActivity extends Activity {
     private AppManager app;
     private TextView   tvScores;
     private TextView   tvPointsGained;
+    private TextView   tvDescAnswer;
+    private String     descAnswer = "";
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -34,23 +36,26 @@ public class AnswerActivity extends Activity {
         btnContinue = (Button) findViewById( R.id.btnContinue );
         tvPointsGained = (TextView) findViewById( R.id.tvPointsGained );
         tvScores = (TextView) findViewById( R.id.tvScores );
-        tvScores.setText( getResources().getString( R.string.scores ) + String.valueOf( scores ) );
+        tvDescAnswer = (TextView) findViewById( R.id.tvDescriptionAnswer );
 
-        onClickBtnQuit();
-        onClickBtnContinue();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        tvScores.setText( getResources().getString( R.string.scores ) + String.valueOf( scores ) );
+
+        onClickBtnQuit();
+        onClickBtnContinue();
+
         if ( getBundleAnswer() == null ) {
             Toast.makeText( getApplicationContext(), "Null Bundle", Toast.LENGTH_LONG ).show();
             finish();
         }
 
         pointsAnswer = getBundleAnswer().getInt( DevinetteActivity.PROCESS_ANSWER );
-        // Toast.makeText( getApplicationContext(), "Boolean Bundle : " +
-        // aProcessAnswer, Toast.LENGTH_LONG ).show();
+        descAnswer = getBundleAnswer().getString( DevinetteActivity.DESC_ANSWER );
+
         tvPointsGained.setText( getResources().getString( R.string.pointsGained ) + pointsAnswer );
         displayAnswer( pointsAnswer );
     }
@@ -119,6 +124,7 @@ public class AnswerActivity extends Activity {
      * @param answer
      */
     private void displayAnswer( int answer ) {
+        tvDescAnswer.setText( descAnswer );
         if ( answer > 0 ) {
             Toast.makeText( getApplicationContext(), "Bonne reponse", Toast.LENGTH_LONG ).show();
         } else {

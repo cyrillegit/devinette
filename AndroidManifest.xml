@@ -49,6 +49,22 @@
             
         </activity>
         
+        <!-- Scores Activity -->
+        <activity 
+            android:name=".ScoresActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
+            
+        </activity>
+        
+        <!-- About Activity -->
+        <activity 
+            android:name=".AboutActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name">
+            
+        </activity>
+        
     </application>
 
 </manifest>

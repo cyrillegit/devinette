@@ -1,5 +1,6 @@
 package com.intelness.devinette;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,42 +15,24 @@ import com.intelness.globals.AppManager;
 import com.intelness.utils.XMLParser;
 
 public class SplashActivity extends Activity {
-    public static final String TAG             = "SplashActivity";
-    private static int         SPLASH_TIME_OUT = 3000;
+    public static final String       TAG             = "SplashActivity";
+    private static int               SPLASH_TIME_OUT = 3000;
 
-    static final String        TEXT            = "text";
-    static final String        ANSWER          = "answer";
-    static final String        FIRST_HINT      = "first_hint";
-    static final String        SECOND_HINT     = "second_hint";
-    static final String        THIRD_HINT      = "third_hint";
-    static final String        DESC_ANSWER     = "desc_answer";
+    static final String              TEXT            = "text";
+    static final String              ANSWER          = "answer";
+    static final String              FIRST_HINT      = "first_hint";
+    static final String              SECOND_HINT     = "second_hint";
+    static final String              THIRD_HINT      = "third_hint";
+    static final String              DESC_ANSWER     = "desc_answer";
 
-    List<Devinette>            devinettes;
+    private List<Devinette>          devinettes;
+    private static ArrayList<String> answers;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.splashactivity );
 
-        // calling the application class
-        final AppManager app = (AppManager) getApplicationContext();
-        app.setCurrentId( -1 );
-        app.setScores( 0 );
-
-        // new Handler().postDelayed( new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // Intent i = new Intent( SplashActivity.this, HomeActivity.class );
-        // startActivity( i );
-        // finish();
-        // }
-        // }, SPLASH_TIME_OUT );
-        // db = new DatabaseHandler( this );
-
-        // Log.i( TAG, "start oncreate loading" );
-        // loadDB();
-        // Log.i( TAG, "finish oncreate loading" );
         new loadDevinettes().execute();
     }
 
@@ -71,6 +54,11 @@ public class SplashActivity extends Activity {
             Log.i( TAG, "start loading" );
             loadDB();
             Log.i( TAG, "finish loading" );
+            Log.i( TAG, "load answers" );
+            answers = getAllDevinettesAnswers();
+            Log.i( TAG, "answers : " + answers.toString() );
+            // load global variables
+            loadGlobalVariables();
             return null;
         }
 
@@ -120,5 +108,34 @@ public class SplashActivity extends Activity {
                 dDao.addDevinette( devinettes.get( i ) );
             }
         }
+    }
+
+    /**
+     * get answers of all devinettes
+     * 
+     * @return
+     */
+    private ArrayList<String> getAllDevinettesAnswers() {
+        DevinetteDAO dDao = new DevinetteDAO( this );
+        ArrayList<String> answers = new ArrayList<String>();
+        Log.d( "Reading", "Reading all devinettes" );
+        List<Devinette> devinette = dDao.getAllDevinettes();
+        for ( Devinette d : devinette ) {
+            answers.add( d.getAnswer().trim() );
+        }
+        return answers;
+    }
+
+    /**
+     * load global variables : cuurentId, list of played id, list of answers
+     */
+    private void loadGlobalVariables() {
+        ArrayList<Integer> playedId = new ArrayList<Integer>();
+        // calling the application class
+        final AppManager app = (AppManager) getApplicationContext();
+        app.setCurrentId( -1 );
+        app.setScores( 0 );
+        app.setPlayedId( playedId );
+        app.setAnswers( answers );
     }
 }

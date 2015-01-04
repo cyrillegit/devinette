@@ -1,7 +1,6 @@
 package com.intelness.devinette;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -35,6 +34,8 @@ public class DevinetteActivity extends Activity {
     private String                   answer                = "";
     // devinette current id
     private int                      currentId;
+    // list of played devinette id
+    private ArrayList<Integer>       playedId;
     // current devinette
     private Devinette                devinette;
     // current scores
@@ -43,6 +44,7 @@ public class DevinetteActivity extends Activity {
     AppManager                       app;
     private final static String      TAG                   = "DevinetteActivity";
     public final static String       PROCESS_ANSWER        = "processAnswer";
+    public final static String       DESC_ANSWER           = "descAnswer";
     private static final int         NUMBER_MAX_HINT       = 3;
     private static ArrayList<String> ANSWERS;
     private int                      number_hint           = 0;
@@ -61,6 +63,8 @@ public class DevinetteActivity extends Activity {
         app = (AppManager) getApplicationContext();
         currentId = app.getCurrentId();
         scores = app.getScores();
+        playedId = app.getPlayedId();
+        ANSWERS = app.getAnswers();
 
         btnHint = (Button) findViewById( R.id.btnHint );
         btnValidate = (Button) findViewById( R.id.btnValidate );
@@ -68,22 +72,14 @@ public class DevinetteActivity extends Activity {
         etAnswer = (AutoCompleteTextView) findViewById( R.id.etAnswer );
         tvDevinette = (TextView) findViewById( R.id.tvDevinette );
         tvScores = (TextView) findViewById( R.id.tvScores );
-        tvScores.setText( getResources().getString( R.string.scores ) + String.valueOf( scores ) );
+        tvScores.setText( getResources().getString( R.string.scores ) + " " + String.valueOf( scores ) );
 
-        // get all the answers of devinettes
-        ANSWERS = getAllDevinettesAnswers();
         Log.i( TAG, "ANSWERS: " + ANSWERS.toString() );
         ArrayAdapter<String> adapter = new ArrayAdapter<String>( this, android.R.layout.simple_list_item_1,
                 ANSWERS );
 
-        // get the devinette to display
-        devinette = getDevinetteToDisplay();
-
         etAnswer.setAdapter( adapter );
-
         number_hint = 0;
-        onClickBtnHint();
-        onClickValidate();
     }
 
     @Override
@@ -104,14 +100,18 @@ public class DevinetteActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
         // get the devinette to display
-        // devinette = getDevinetteToDisplay();
-        // store the current id of devinette
-        app = (AppManager) getApplicationContext();
-        app.setCurrentId( (int) devinette.getId() );
-        Log.i( TAG, "current id : " + devinette.getId() );
-        // display the devinette
-        tvDevinette.setText( (String) devinette.getDevinette() );
+        devinette = getDevinetteToDisplay();
+        if ( devinette == null ) {
+            openAlertOnDevinetteFinish();
+        } else {
+            // display the devinette
+            tvDevinette.setText( (String) devinette.getDevinette() );
+        }
+
+        onClickBtnHint();
+        onClickValidate();
     }
 
     @Override
@@ -159,6 +159,7 @@ public class DevinetteActivity extends Activity {
     }
 
     /**
+     * display hint for devinettes
      * 
      */
     private void openAlertBtnHint() {
@@ -186,7 +187,31 @@ public class DevinetteActivity extends Activity {
     }
 
     /**
-     * 
+     * alert to display when devinettes are finished
+     */
+    private void openAlertOnDevinetteFinish() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( DevinetteActivity.this );
+        alertDialogBuilder.setTitle( R.string.devinette_finish_title );
+        alertDialogBuilder.setMessage( getResources().getString( R.string.devinette_finish ) );
+
+        alertDialogBuilder.setNeutralButton( R.string.close, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick( DialogInterface dialog, int which ) {
+                Intent intent = new Intent( getApplicationContext(), ScoresActivity.class );
+                startActivity( intent );
+                finish();
+
+                dialog.dismiss();
+            }
+        } );
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * triggered when validate button is clicked
      */
     private void onClickValidate() {
 
@@ -202,6 +227,7 @@ public class DevinetteActivity extends Activity {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt( PROCESS_ANSWER, pointsAnswer );
+                    bundle.putString( DESC_ANSWER, devinette.getDescriptionAnswer() );
 
                     Intent intent = new Intent( getApplicationContext(), AnswerActivity.class );
                     intent.putExtras( bundle );
@@ -258,20 +284,34 @@ public class DevinetteActivity extends Activity {
      * Generate a random number between min and max and different from currentId
      * 
      * @param min
+     *            is inclusive
      * @param max
+     *            is exclusive
      * @param currentId
      * @return
      */
     private int generateRandomNumber( int min, int max, int currentId ) {
         int nb;
+        boolean isEqual = false;
+        ArrayList<Integer> playedId = new ArrayList<Integer>();
+        app = (AppManager) getApplicationContext();
+        playedId = app.getPlayedId();
+        Log.i( TAG, "played id : " + playedId.toString() );
         Random r = new Random();
         if ( currentId < 0 ) {
             nb = r.nextInt( max - min + 1 ) + min;
         } else {
             do {
+                isEqual = false;
                 nb = r.nextInt( max - min + 1 ) + min;
-            } while ( nb == currentId );
+                for ( int i = 0; i < playedId.size(); i++ ) {
+                    if ( nb == playedId.get( i ) ) {
+                        isEqual = true;
+                    }
+                }
+            } while ( isEqual );
         }
+        Log.i( TAG, "nb : " + nb );
         return nb;
     }
 
@@ -281,26 +321,25 @@ public class DevinetteActivity extends Activity {
      * @return
      */
     private Devinette getDevinetteToDisplay() {
-        DevinetteDAO dDao = new DevinetteDAO( this );
-        int count = dDao.getNumberOfDevinettes();
-        int devinetteId = generateRandomNumber( 0, count, currentId );
-        Devinette devinette = dDao.getDevinetteById( devinetteId );
-        return devinette;
-    }
 
-    /**
-     * get answers of all devinettes
-     * 
-     * @return
-     */
-    private ArrayList<String> getAllDevinettesAnswers() {
         DevinetteDAO dDao = new DevinetteDAO( this );
-        ArrayList<String> answers = new ArrayList<String>();
-        Log.d( "Reading", "Reading all devinettes" );
-        List<Devinette> devinette = dDao.getAllDevinettes();
-        for ( Devinette d : devinette ) {
-            answers.add( d.getAnswer().trim() );
+        // int count = dDao.getNumberOfDevinettes();
+        int count = ANSWERS.size();
+        Log.i( TAG, "played id : " + playedId.size() + "   count : " + count );
+        if ( playedId.size() < count ) {
+            int devinetteId = generateRandomNumber( 1, count, currentId );
+            if ( devinetteId <= 0 ) {
+                return null;
+            }
+            Devinette devinette = dDao.getDevinetteById( devinetteId );
+            // store list of devinette played
+            app = (AppManager) getApplicationContext();
+            app.setCurrentId( devinetteId );
+            playedId.add( devinetteId );
+            app.setPlayedId( playedId );
+            return devinette;
+        } else {
+            return null;
         }
-        return answers;
     }
 }

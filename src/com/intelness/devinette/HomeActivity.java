@@ -81,7 +81,9 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-                // LoadDevinettes();
+                Intent i = new Intent( getApplicationContext(), ScoresActivity.class );
+                startActivity( i );
+                finish();
             }
         } );
     }
@@ -94,7 +96,10 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-                readDevinettes();
+                Intent i = new Intent( getApplicationContext(), AboutActivity.class );
+                startActivity( i );
+                finish();
+                // readDevinettes();
             }
         } );
     }

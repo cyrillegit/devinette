@@ -16,5 +16,9 @@
     <string name="empty_answer">Veuillez entrer une reponse.</string>
     <string name="number_hint_over">Vous avez épuisé toutes les suggestions possibles</string>
     <string name="pointsGained">Points gained : </string>
+    <string name="devinette_finish">Toutes les devinettes ont été jouées, Visualisez vos scores</string>
+    <string name="devinette_finish_title">Fin des devinettes</string>
+    <string name="restart">Restart</string>
+    <string name="home">Home</string>
 
 </resources>

@@ -84,6 +84,7 @@ public class DevinetteDAO extends DatabaseDAO {
                 cursor.getString( 5 ),
                 cursor.getString( 6 ) );
 
+        cursor.close();
         return devinette;
     }
 
@@ -154,6 +155,7 @@ public class DevinetteDAO extends DatabaseDAO {
                 devinetteList.add( devinette );
             } while ( cursor.moveToNext() );
         }
+        // cursor.close();
         return devinetteList;
     }
 

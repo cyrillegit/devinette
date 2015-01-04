@@ -77,22 +77,16 @@ public class XMLParser {
                         // add devinette object to the list
                         devinettes.add( devinette );
                     } else if ( tagName.equalsIgnoreCase( DEVINETTE_TEXT ) ) {
-                        Log.i( TAG, "devinette : " + text );
                         devinette.setDevinette( text );
                     } else if ( tagName.equalsIgnoreCase( ANSWER ) ) {
-                        Log.i( TAG, "answer : " + text );
                         devinette.setAnswer( text );
                     } else if ( tagName.equalsIgnoreCase( FIRST_HINT ) ) {
-                        Log.i( TAG, "first hint : " + text );
                         devinette.setFirstHint( text );
                     } else if ( tagName.equalsIgnoreCase( SECOND_HINT ) ) {
-                        Log.i( TAG, "second hint : " + text );
                         devinette.setSecondHint( text );
                     } else if ( tagName.equalsIgnoreCase( THIRD_HINT ) ) {
-                        Log.i( TAG, "third hint : " + text );
                         devinette.setThirdHint( text );
                     } else if ( tagName.equalsIgnoreCase( DESC_ANSWER ) ) {
-                        Log.i( TAG, "desc answer : " + text );
                         devinette.setDescriptionAnswer( text );
                     }
                     break;
