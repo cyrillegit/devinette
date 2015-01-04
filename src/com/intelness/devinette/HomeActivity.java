@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.intelness.beans.Devinette;
-import com.intelness.db.DatabaseHandler;
+import com.intelness.beans.DevinetteDAO;
 
 public class HomeActivity extends Activity {
     Button                      btnPlay;
@@ -26,13 +26,6 @@ public class HomeActivity extends Activity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.homeactivity );
 
-        btnPlay = (Button) findViewById( R.id.btnPlay );
-        btnScores = (Button) findViewById( R.id.btnScores );
-        btnAbout = (Button) findViewById( R.id.btnAbout );
-
-        onClickBtnPlay();
-        onClickBtnAbout();
-        onClickBtnScores();
     }
 
     @Override
@@ -46,6 +39,24 @@ public class HomeActivity extends Activity {
             // if the back button is clicked a second time
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        btnPlay = (Button) findViewById( R.id.btnPlay );
+        btnScores = (Button) findViewById( R.id.btnScores );
+        btnAbout = (Button) findViewById( R.id.btnAbout );
+
+        onClickBtnPlay();
+        onClickBtnAbout();
+        onClickBtnScores();
+    }
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
     }
 
     /**
@@ -70,7 +81,7 @@ public class HomeActivity extends Activity {
 
             @Override
             public void onClick( View v ) {
-                LoadDevinettes();
+                // LoadDevinettes();
             }
         } );
     }
@@ -88,25 +99,17 @@ public class HomeActivity extends Activity {
         } );
     }
 
-    private void LoadDevinettes() {
-        DatabaseHandler db = new DatabaseHandler( this );
-
-        Log.d( "Insert", "Inserting" );
-        db.addDevinette( new Devinette( "Histoire d'elephant", "Elephant" ) );
-        db.addDevinette( new Devinette( "Histoire de lion", "Lion" ) );
-        db.addDevinette( new Devinette( "Histoire de singe", "Singe" ) );
-        db.addDevinette( new Devinette( "Histoire de girafe", "Girafe" ) );
-    }
-
     private void readDevinettes() {
-        DatabaseHandler db = new DatabaseHandler( this );
+        DevinetteDAO dDao = new DevinetteDAO( this );
 
         Log.d( "Reading", "Reading all devinettes" );
-        List<Devinette> devinette = db.getAllDevinettes();
+        List<Devinette> devinette = dDao.getAllDevinettes();
         for ( Devinette d : devinette ) {
-            String log = "Id: " + d.getId() + " , Devinette: " + d.getDevinette() + " , Answer: " + d.getAnswer();
+            String log = "Id: " + d.getId() + " , Devinette: " + d.getDevinette() +
+                    " , Answer: " + d.getAnswer()
+                    + " , first hint : " + d.getFirstHint();
             Log.d( "Devinettes : ", log );
         }
-        Log.d( TAG, "all devinettes: " + db.getNumberOfDevinettes() );
+        Log.d( TAG, "all devinettes: " + dDao.getNumberOfDevinettes() );
     }
 }

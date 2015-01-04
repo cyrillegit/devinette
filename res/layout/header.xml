@@ -7,7 +7,7 @@
     android:background="#FFFFFF" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/ivLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -15,7 +15,7 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/tvpseudo"
+        android:id="@+id/tvPseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -24,10 +24,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tvscores"
+        android:id="@+id/tvScores"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
+        android:layout_alignBottom="@+id/ivLogo"
         android:layout_alignParentRight="true"
         android:text="@string/scores"
         android:textAppearance="?android:attr/textAppearanceMedium" />

@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.intelness.beans.Devinette;
-import com.intelness.db.DatabaseHandler;
+import com.intelness.beans.DevinetteDAO;
 import com.intelness.globals.AppManager;
 
 public class DevinetteActivity extends Activity {
@@ -29,18 +29,28 @@ public class DevinetteActivity extends Activity {
 
     AutoCompleteTextView             etAnswer;
     TextView                         tvDevinette;
+    TextView                         tvScores;
 
-    private String                   hintMessage    = "Hint message";
-    private String                   answer         = "";
+    private String                   hintMessage           = "";
+    private String                   answer                = "";
     // devinette current id
     private int                      currentId;
     // current devinette
-    Devinette                        devinette;
+    private Devinette                devinette;
+    // current scores
+    private int                      scores;
 
     AppManager                       app;
-    private final static String      TAG            = "DevinetteActivity";
-    public final static String       PROCESS_ANSWER = "processAnswer";
+    private final static String      TAG                   = "DevinetteActivity";
+    public final static String       PROCESS_ANSWER        = "processAnswer";
+    private static final int         NUMBER_MAX_HINT       = 3;
     private static ArrayList<String> ANSWERS;
+    private int                      number_hint           = 0;
+    private final static int         MARK_WITHOUT_HINT     = 8;
+    private final static int         MARK_WITH_FIRST_HINT  = 5;
+    private final static int         MARK_WITH_SECOND_HINT = 3;
+    private final static int         MARK_WITH_THIRD_HINT  = 2;
+    private final static int         MARK_AFTER_THIRD_HINT = 1;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -50,20 +60,28 @@ public class DevinetteActivity extends Activity {
         // get the current id of deveinette from application class
         app = (AppManager) getApplicationContext();
         currentId = app.getCurrentId();
+        scores = app.getScores();
 
         btnHint = (Button) findViewById( R.id.btnHint );
         btnValidate = (Button) findViewById( R.id.btnValidate );
 
         etAnswer = (AutoCompleteTextView) findViewById( R.id.etAnswer );
         tvDevinette = (TextView) findViewById( R.id.tvDevinette );
+        tvScores = (TextView) findViewById( R.id.tvScores );
+        tvScores.setText( getResources().getString( R.string.scores ) + String.valueOf( scores ) );
 
+        // get all the answers of devinettes
         ANSWERS = getAllDevinettesAnswers();
         Log.i( TAG, "ANSWERS: " + ANSWERS.toString() );
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>( this, android.R.layout.simple_dropdown_item_1line,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>( this, android.R.layout.simple_list_item_1,
                 ANSWERS );
+
+        // get the devinette to display
+        devinette = getDevinetteToDisplay();
 
         etAnswer.setAdapter( adapter );
 
+        number_hint = 0;
         onClickBtnHint();
         onClickValidate();
     }
@@ -75,13 +93,11 @@ public class DevinetteActivity extends Activity {
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onRestart() {
-        // TODO Auto-generated method stub
         super.onRestart();
     }
 
@@ -89,11 +105,11 @@ public class DevinetteActivity extends Activity {
     protected void onStart() {
         super.onStart();
         // get the devinette to display
-        devinette = getDevinetteToDisplay();
+        // devinette = getDevinetteToDisplay();
         // store the current id of devinette
         app = (AppManager) getApplicationContext();
         app.setCurrentId( (int) devinette.getId() );
-        Log.e( TAG, "current id : " + devinette.getId() );
+        Log.i( TAG, "current id : " + devinette.getId() );
         // display the devinette
         tvDevinette.setText( (String) devinette.getDevinette() );
     }
@@ -114,7 +130,45 @@ public class DevinetteActivity extends Activity {
         } );
     }
 
+    /**
+     * get hint message according to level
+     * 
+     * @param num
+     * @return
+     */
+    private String getHint( int num ) {
+        String hint = "";
+        switch ( num ) {
+        case 1:
+            hint = devinette.getFirstHint();
+            break;
+
+        case 2:
+            hint = devinette.getSecondHint();
+            break;
+
+        case 3:
+            hint = devinette.getThirdHint();
+            break;
+
+        default:
+            break;
+        }
+        Log.i( TAG, "num   , hint : " + num + "    ," + hint );
+        return hint;
+    }
+
+    /**
+     * 
+     */
     private void openAlertBtnHint() {
+        number_hint++;
+        Log.i( TAG, "number_hint : " + number_hint );
+        if ( number_hint > 0 && number_hint <= NUMBER_MAX_HINT ) {
+            hintMessage = getHint( number_hint );
+        } else {
+            hintMessage = getResources().getString( R.string.number_hint_over );
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( DevinetteActivity.this );
         alertDialogBuilder.setTitle( R.string.hint_title );
         alertDialogBuilder.setMessage( hintMessage );
@@ -131,6 +185,9 @@ public class DevinetteActivity extends Activity {
         alertDialog.show();
     }
 
+    /**
+     * 
+     */
     private void onClickValidate() {
 
         btnValidate.setOnClickListener( new View.OnClickListener() {
@@ -141,10 +198,10 @@ public class DevinetteActivity extends Activity {
                 if ( TextUtils.isEmpty( answer ) ) {
                     Toast.makeText( getApplicationContext(), R.string.empty_answer, Toast.LENGTH_LONG ).show();
                 } else {
-                    boolean aProcessAnswer = processAnswer( answer );
+                    int pointsAnswer = processAnswer( answer );
 
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean( PROCESS_ANSWER, aProcessAnswer );
+                    bundle.putInt( PROCESS_ANSWER, pointsAnswer );
 
                     Intent intent = new Intent( getApplicationContext(), AnswerActivity.class );
                     intent.putExtras( bundle );
@@ -160,19 +217,41 @@ public class DevinetteActivity extends Activity {
      * 
      * @return boolean
      */
-    private boolean processAnswer( String answer ) {
-        boolean res = false;
+    private int processAnswer( String answer ) {
+        int points = 0;
         if ( !TextUtils.isEmpty( answer ) ) {
             answer = answer.trim().toLowerCase( Locale.FRENCH );
-            if ( answer.equals( devinette.getAnswer().trim().toLowerCase( Locale.FRENCH ) ) ) {
-                res = true;
+            if ( answer.equalsIgnoreCase( ( devinette.getAnswer().trim() ) ) ) {
+                switch ( number_hint ) {
+                case 0:
+                    scores += MARK_WITHOUT_HINT;
+                    points = MARK_WITHOUT_HINT;
+                    break;
+                case 1:
+                    scores += MARK_WITH_FIRST_HINT;
+                    points = MARK_WITH_FIRST_HINT;
+                    break;
+                case 2:
+                    scores += MARK_WITH_SECOND_HINT;
+                    points = MARK_WITH_SECOND_HINT;
+                    break;
+                case 3:
+                    scores += MARK_WITH_THIRD_HINT;
+                    points = MARK_WITH_THIRD_HINT;
+                    break;
+                default:
+                    points = MARK_AFTER_THIRD_HINT;
+                    break;
+                }
             } else {
-                res = false;
+                points = 0;
             }
         } else {
-            res = false;
+            points = 0;
         }
-        return res;
+        app = (AppManager) getApplicationContext();
+        app.setScores( scores );
+        return points;
     }
 
     /**
@@ -202,18 +281,23 @@ public class DevinetteActivity extends Activity {
      * @return
      */
     private Devinette getDevinetteToDisplay() {
-        DatabaseHandler db = new DatabaseHandler( this );
-        int count = db.getNumberOfDevinettes();
+        DevinetteDAO dDao = new DevinetteDAO( this );
+        int count = dDao.getNumberOfDevinettes();
         int devinetteId = generateRandomNumber( 0, count, currentId );
-        Devinette devinette = db.getDevinette( devinetteId );
+        Devinette devinette = dDao.getDevinetteById( devinetteId );
         return devinette;
     }
 
+    /**
+     * get answers of all devinettes
+     * 
+     * @return
+     */
     private ArrayList<String> getAllDevinettesAnswers() {
-        DatabaseHandler db = new DatabaseHandler( this );
+        DevinetteDAO dDao = new DevinetteDAO( this );
         ArrayList<String> answers = new ArrayList<String>();
         Log.d( "Reading", "Reading all devinettes" );
-        List<Devinette> devinette = db.getAllDevinettes();
+        List<Devinette> devinette = dDao.getAllDevinettes();
         for ( Devinette d : devinette ) {
             answers.add( d.getAnswer().trim() );
         }

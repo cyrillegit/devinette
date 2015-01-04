@@ -5,14 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.intelness.globals.AppManager;
 
 public class AnswerActivity extends Activity {
 
-    Button          btnQuit;
-    Button          btnContinue;
+    Button             btnQuit;
+    Button             btnContinue;
 
-    private boolean aProcessAnswer;
+    private int        pointsAnswer;
+    private int        scores;
+    private AppManager app;
+    private TextView   tvScores;
+    private TextView   tvPointsGained;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -20,8 +27,14 @@ public class AnswerActivity extends Activity {
 
         setContentView( R.layout.answeractivity );
 
+        // get the current id of deveinette from application class
+        app = (AppManager) getApplicationContext();
+        scores = app.getScores();
         btnQuit = (Button) findViewById( R.id.btnQuit );
         btnContinue = (Button) findViewById( R.id.btnContinue );
+        tvPointsGained = (TextView) findViewById( R.id.tvPointsGained );
+        tvScores = (TextView) findViewById( R.id.tvScores );
+        tvScores.setText( getResources().getString( R.string.scores ) + String.valueOf( scores ) );
 
         onClickBtnQuit();
         onClickBtnContinue();
@@ -35,10 +48,11 @@ public class AnswerActivity extends Activity {
             finish();
         }
 
-        aProcessAnswer = getBundleAnswer().getBoolean( DevinetteActivity.PROCESS_ANSWER );
+        pointsAnswer = getBundleAnswer().getInt( DevinetteActivity.PROCESS_ANSWER );
         // Toast.makeText( getApplicationContext(), "Boolean Bundle : " +
         // aProcessAnswer, Toast.LENGTH_LONG ).show();
-        displayAnswer( aProcessAnswer );
+        tvPointsGained.setText( getResources().getString( R.string.pointsGained ) + pointsAnswer );
+        displayAnswer( pointsAnswer );
     }
 
     @Override
@@ -104,8 +118,8 @@ public class AnswerActivity extends Activity {
      * 
      * @param answer
      */
-    private void displayAnswer( boolean answer ) {
-        if ( answer == true ) {
+    private void displayAnswer( int answer ) {
+        if ( answer > 0 ) {
             Toast.makeText( getApplicationContext(), "Bonne reponse", Toast.LENGTH_LONG ).show();
         } else {
             Toast.makeText( getApplicationContext(), "Mauvaise reponse", Toast.LENGTH_LONG ).show();

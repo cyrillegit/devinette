@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<devinettes>
+    <devinette>
+        <text>Histoire de grenouille</text>
+        <answer>Grenouille</answer>
+        <first_hint>Animal</first_hint>
+        <second_hint>Sauteur</second_hint>
+        <third_hint>Amphibien</third_hint>
+        <desc_answer>descrition grenouille</desc_answer>
+    </devinette>
+    <devinette>
+        <text>Histoire de chien</text>
+        <answer>Chien</answer>
+        <first_hint>Animal</first_hint>
+        <second_hint>Quatre pattes</second_hint>
+        <third_hint>Domestique</third_hint>
+        <desc_answer>description chien</desc_answer>
+    </devinette>
+    <devinette>
+        <text>Histoire de goyave</text>
+        <answer>Goyave</answer>
+        <first_hint>Fruit</first_hint>
+        <second_hint>Tropicale</second_hint>
+        <third_hint>Sucrée</third_hint>
+        <desc_answer>description goyave</desc_answer>
+    </devinette>
+    <devinette>
+        <text>Histoire de marmite</text>
+        <answer>Marmite</answer>
+        <first_hint>Feu</first_hint>
+        <second_hint>Cuisine</second_hint>
+        <third_hint>Nourriture</third_hint>
+        <desc_answer>description marmite</desc_answer>
+    </devinette>
+    <devinette>
+        <text>Histoire de Chasseur</text>
+        <answer>Chasseur</answer>
+        <first_hint>Humain</first_hint>
+        <second_hint>Courir</second_hint>
+        <third_hint>Gibier</third_hint>
+        <desc_answer>description chasseur</desc_answer>
+    </devinette>
+</devinettes>
